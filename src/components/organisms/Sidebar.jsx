@@ -14,7 +14,9 @@ const Sidebar = ({
   onCategoryDelete,
   taskCounts = {},
   isMobileOpen = false,
-  onMobileClose
+  onMobileClose,
+  viewMode = 'list',
+  onViewModeChange
 }) => {
   const [showCategoryForm, setShowCategoryForm] = useState(false)
   const [editingCategory, setEditingCategory] = useState(null)
@@ -122,7 +124,32 @@ const Sidebar = ({
                 }
               `}>
                 {allTasksCount}
-              </span>
+</span>
+            </motion.button>
+
+            {/* Calendar View Button */}
+            <motion.button
+              whileHover={{ x: 4 }}
+              onClick={() => onViewModeChange('calendar')}
+              className={`
+                w-full flex items-center justify-between p-4 rounded-xl mb-4
+                transition-all duration-200 ease-out
+                ${viewMode === 'calendar' 
+                  ? 'bg-primary-50 border-2 border-primary-200' 
+                  : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
+                }
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <ApperIcon 
+                  name="Calendar" 
+                  size={20} 
+                  className={viewMode === 'calendar' ? 'text-primary-600' : 'text-gray-600'} 
+                />
+                <span className={`font-medium ${viewMode === 'calendar' ? 'text-primary-700' : 'text-gray-700'}`}>
+                  Calendar View
+                </span>
+              </div>
             </motion.button>
           </div>
 

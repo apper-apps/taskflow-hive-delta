@@ -10,7 +10,9 @@ const Input = forwardRef(({
   className = '',
   ...props
 }, ref) => {
-  const baseClasses = 'w-full px-4 py-3 rounded-lg border transition-all duration-200 ease-out focus-ring bg-white'
+const baseClasses = type === 'date' 
+    ? 'w-full px-4 py-3 rounded-lg border transition-all duration-200 ease-out focus-ring bg-white [color-scheme:light]'
+    : 'w-full px-4 py-3 rounded-lg border transition-all duration-200 ease-out focus-ring bg-white'
   
   const stateClasses = error
     ? 'border-accent-300 focus:border-accent-500'

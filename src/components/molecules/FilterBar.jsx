@@ -5,7 +5,10 @@ import Button from '@/components/atoms/Button'
 const FilterBar = ({ 
   filters, 
   onFilterChange, 
-  taskCounts = {}
+  taskCounts = {},
+  viewMode = 'list',
+  dateRange = { start: null, end: null },
+  onDateRangeChange
 }) => {
   const filterButtons = [
     { 
@@ -144,23 +147,72 @@ const FilterBar = ({
             ))}
           </div>
         </div>
+</div>
+
+        {/* Date Range Filters - Only for Calendar View */}
+        {viewMode === 'calendar' && (
+          <div>
+            <h3 className="text-sm font-medium text-gray-700 mb-3">Date Range</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">From</label>
+                <input
+                  type="date"
+                  value={dateRange.start || ''}
+                  onChange={(e) => onDateRangeChange({ 
+                    ...dateRange, 
+                    start: e.target.value || null 
+                  })}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">To</label>
+                <input
+                  type="date"
+                  value={dateRange.end || ''}
+                  onChange={(e) => onDateRangeChange({ 
+                    ...dateRange, 
+                    end: e.target.value || null 
+                  })}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+            {(dateRange.start || dateRange.end) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                icon="X"
+                onClick={() => onDateRangeChange({ start: null, end: null })}
+                className="text-gray-500 hover:text-gray-700 mt-2"
+              >
+                Clear Date Range
+              </Button>
+            )}
+          </div>
+        )}
 
         {/* Clear Filters */}
-        {(filters.status !== 'all' || filters.priority !== 'all' || filters.sortBy !== 'dueDate') && (
+        {(filters.status !== 'all' || filters.priority !== 'all' || filters.sortBy !== 'dueDate' || dateRange.start || dateRange.end) && (
           <div className="pt-4 border-t border-gray-100">
             <Button
               variant="ghost"
               size="sm"
               icon="X"
-              onClick={() => onFilterChange('reset')}
+              onClick={() => {
+                onFilterChange('reset')
+                if (onDateRangeChange) {
+                  onDateRangeChange({ start: null, end: null })
+                }
+              }}
               className="text-gray-500 hover:text-gray-700"
             >
-              Clear Filters
+              Clear All Filters
             </Button>
           </div>
         )}
       </div>
-    </div>
   )
 }
 

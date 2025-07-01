@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { toast } from 'react-toastify'
-import { useOutletContext } from 'react-router-dom'
-import ApperIcon from '@/components/ApperIcon'
-import Button from '@/components/atoms/Button'
-import TaskList from '@/components/organisms/TaskList'
-import TaskForm from '@/components/molecules/TaskForm'
-import Sidebar from '@/components/organisms/Sidebar'
-import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
-import * as taskService from '@/services/api/taskService'
-import * as categoryService from '@/services/api/categoryService'
-
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { useOutletContext } from "react-router-dom";
+import CalendarView from "@/components/organisms/CalendarView";
+import ApperIcon from "@/components/ApperIcon";
+import TaskList from "@/components/organisms/TaskList";
+import Sidebar from "@/components/organisms/Sidebar";
+import Button from "@/components/atoms/Button";
+import TaskForm from "@/components/molecules/TaskForm";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import * as taskService from "@/services/api/taskService";
+import * as categoryService from "@/services/api/categoryService";
 const TaskDashboard = () => {
   const { closeMobileSidebar } = useOutletContext() || {}
   
@@ -21,11 +21,13 @@ const TaskDashboard = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   
-  // UI state
+// UI state
   const [showTaskForm, setShowTaskForm] = useState(false)
   const [editingTask, setEditingTask] = useState(null)
   const [activeCategoryId, setActiveCategoryId] = useState(null)
-
+  const [viewMode, setViewMode] = useState('list') // 'list' or 'calendar'
+  const [selectedDate, setSelectedDate] = useState(null)
+  const [dateRange, setDateRange] = useState({ start: null, end: null })
   // Load initial data
   useEffect(() => {
     loadData()
@@ -285,9 +287,11 @@ const TaskDashboard = () => {
           activeCategoryId={activeCategoryId}
           onCategorySelect={handleCategorySelect}
           onCategoryCreate={handleCategoryCreate}
-          onCategoryUpdate={handleCategoryUpdate}
+onCategoryUpdate={handleCategoryUpdate}
           onCategoryDelete={handleCategoryDelete}
           taskCounts={taskCounts}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
         />
       </div>
 
@@ -305,18 +309,50 @@ const TaskDashboard = () => {
               </h1>
               <p className="text-gray-600">
                 {filteredTasks.length} {filteredTasks.length === 1 ? 'task' : 'tasks'} total
-              </p>
+</p>
             </div>
             
-            <Button
-              variant="primary"
-              icon="Plus"
-              onClick={() => setShowTaskForm(true)}
-              className="shadow-medium hover:shadow-hover"
-            >
-              <span className="hidden sm:inline">Add Task</span>
-              <span className="sm:hidden">Add</span>
-            </Button>
+            <div className="flex items-center gap-3">
+              {/* View Toggle */}
+              <div className="flex bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`
+                    flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all
+                    ${viewMode === 'list' 
+                      ? 'bg-white text-gray-900 shadow-sm' 
+                      : 'text-gray-600 hover:text-gray-900'
+                    }
+                  `}
+                >
+                  <ApperIcon name="List" size={16} />
+                  <span className="hidden sm:inline">List</span>
+                </button>
+                <button
+                  onClick={() => setViewMode('calendar')}
+                  className={`
+                    flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all
+                    ${viewMode === 'calendar' 
+                      ? 'bg-white text-gray-900 shadow-sm' 
+                      : 'text-gray-600 hover:text-gray-900'
+                    }
+                  `}
+                >
+                  <ApperIcon name="Calendar" size={16} />
+                  <span className="hidden sm:inline">Calendar</span>
+                </button>
+              </div>
+
+              <Button
+                variant="primary"
+                icon="Plus"
+                onClick={() => setShowTaskForm(true)}
+                className="shadow-medium hover:shadow-hover"
+              >
+                <span className="hidden sm:inline">Add Task</span>
+                <span className="sm:hidden">Add</span>
+              </Button>
+</div>
           </div>
         </header>
 
@@ -351,20 +387,35 @@ const TaskDashboard = () => {
                       onSubmit={handleTaskSubmit}
                       onCancel={handleFormCancel}
                     />
-                  </motion.div>
+</motion.div>
                 )}
               </AnimatePresence>
 
-              <TaskList
-                tasks={filteredTasks}
-                categories={categoriesWithCounts}
-                loading={false}
-                error={null}
-                onTaskToggle={handleTaskToggle}
-                onTaskEdit={handleTaskEdit}
-                onTaskDelete={handleTaskDelete}
-                onRetry={loadData}
-              />
+              {viewMode === 'list' ? (
+                <TaskList
+                  tasks={filteredTasks}
+                  categories={categoriesWithCounts}
+                  loading={false}
+                  error={null}
+                  onTaskToggle={handleTaskToggle}
+                  onTaskEdit={handleTaskEdit}
+                  onTaskDelete={handleTaskDelete}
+                  onRetry={loadData}
+                />
+              ) : (
+                <CalendarView
+                  tasks={filteredTasks}
+                  categories={categoriesWithCounts}
+                  onTaskToggle={handleTaskToggle}
+                  onTaskEdit={handleTaskEdit}
+                  onTaskDelete={handleTaskDelete}
+                  onTaskCreate={() => setShowTaskForm(true)}
+                  selectedDate={selectedDate}
+                  onDateSelect={setSelectedDate}
+                  dateRange={dateRange}
+                  onDateRangeChange={setDateRange}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -85,3 +85,45 @@ export const getTasksByPriority = async (priority) => {
   const filteredTasks = tasks.filter(task => task.priority === priority)
   return [...filteredTasks]
 }
+
+export const getTasksByDateRange = async (startDate, endDate) => {
+  await delay(200)
+  
+  const filteredTasks = tasks.filter(task => {
+    if (!task.dueDate) return false
+    
+    const taskDate = new Date(task.dueDate)
+    const start = startDate ? new Date(startDate) : null
+    const end = endDate ? new Date(endDate) : null
+    
+    if (start && end) {
+      return taskDate >= start && taskDate <= end
+    }
+    
+    if (start) {
+      return taskDate >= start
+    }
+    
+    if (end) {
+      return taskDate <= end
+    }
+    
+    return true
+  })
+  
+  return [...filteredTasks]
+}
+
+export const getTasksByDate = async (date) => {
+  await delay(200)
+  
+  const targetDate = new Date(date)
+  const filteredTasks = tasks.filter(task => {
+    if (!task.dueDate) return false
+    
+    const taskDate = new Date(task.dueDate)
+    return taskDate.toDateString() === targetDate.toDateString()
+  })
+  
+  return [...filteredTasks]
+}
