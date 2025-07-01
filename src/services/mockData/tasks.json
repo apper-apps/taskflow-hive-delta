@@ -1,0 +1,90 @@
+[
+  {
+    "Id": 1,
+    "title": "Review quarterly financial reports",
+    "description": "Analyze Q3 financial performance and prepare summary for stakeholders meeting",
+    "priority": "high",
+    "dueDate": "2024-01-15",
+    "categoryId": 1,
+    "completed": false,
+    "createdAt": "2024-01-10T09:00:00.000Z",
+    "completedAt": null
+  },
+  {
+    "Id": 2,
+    "title": "Update project documentation",
+    "description": "Revise API documentation and add new endpoint descriptions",
+    "priority": "medium",
+    "dueDate": "2024-01-18",
+    "categoryId": 2,
+    "completed": false,
+    "createdAt": "2024-01-10T10:30:00.000Z",
+    "completedAt": null
+  },
+  {
+    "Id": 3,
+    "title": "Plan team building activity",
+    "description": "Organize quarterly team building event, research venues and activities",
+    "priority": "low",
+    "dueDate": "2024-01-25",
+    "categoryId": 3,
+    "completed": false,
+    "createdAt": "2024-01-10T14:15:00.000Z",
+    "completedAt": null
+  },
+  {
+    "Id": 4,
+    "title": "Complete security audit checklist",
+    "description": "Review all systems for security vulnerabilities and update protocols",
+    "priority": "high",
+    "dueDate": "2024-01-12",
+    "categoryId": 2,
+    "completed": true,
+    "createdAt": "2024-01-08T11:00:00.000Z",
+    "completedAt": "2024-01-11T16:45:00.000Z"
+  },
+  {
+    "Id": 5,
+    "title": "Grocery shopping",
+    "description": "Buy ingredients for weekend dinner party - check pantry first",
+    "priority": "medium",
+    "dueDate": "2024-01-14",
+    "categoryId": 4,
+    "completed": false,
+    "createdAt": "2024-01-10T19:20:00.000Z",
+    "completedAt": null
+  },
+  {
+    "Id": 6,
+    "title": "Schedule dentist appointment",
+    "description": "Book routine cleaning appointment for next month",
+    "priority": "low",
+    "dueDate": null,
+    "categoryId": 4,
+    "completed": true,
+    "createdAt": "2024-01-09T12:30:00.000Z",
+    "completedAt": "2024-01-10T08:15:00.000Z"
+  },
+  {
+    "Id": 7,
+    "title": "Prepare presentation slides",
+    "description": "Create slides for Monday's client presentation, include latest metrics",
+    "priority": "high",
+    "dueDate": "2024-01-13",
+    "categoryId": 1,
+    "completed": false,
+    "createdAt": "2024-01-10T16:45:00.000Z",
+    "completedAt": null
+  },
+  {
+    "Id": 8,
+    "title": "Research new marketing tools",
+    "description": "Evaluate social media management platforms for Q2 implementation",
+    "priority": "medium",
+    "dueDate": "2024-01-20",
+    "categoryId": 1,
+    "completed": false,
+    "createdAt": "2024-01-10T13:10:00.000Z",
+    "completedAt": null
+  }
+]
