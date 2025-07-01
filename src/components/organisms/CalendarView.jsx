@@ -1,17 +1,25 @@
-import { useState, useEffect, useMemo } from 'react'
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment'
-import { motion, AnimatePresence } from 'framer-motion'
-import { format, isToday, isPast, startOfMonth, endOfMonth } from 'date-fns'
-import { toast } from 'react-toastify'
-import ApperIcon from '@/components/ApperIcon'
-import Button from '@/components/atoms/Button'
-import Badge from '@/components/atoms/Badge'
-import TaskForm from '@/components/molecules/TaskForm'
-import * as taskService from '@/services/api/taskService'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+import React, { useEffect, useMemo, useState } from "react";
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { AnimatePresence, motion } from "framer-motion";
+import { endOfMonth, format, getDay, isPast, isToday, parse, startOfMonth, startOfWeek } from "date-fns";
+import { enUS } from "date-fns/locale";
+import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Button from "@/components/atoms/Button";
+import TaskForm from "@/components/molecules/TaskForm";
+import * as taskService from "@/services/api/taskService";
 
-const localizer = momentLocalizer(moment)
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales: {
+    'en-US': enUS,
+  },
+})
 
 const CalendarView = ({
   tasks = [],
@@ -22,7 +30,7 @@ const CalendarView = ({
   onTaskCreate,
   selectedDate,
   onDateSelect,
-  dateRange,
+  dateRange = {},
   onDateRangeChange
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -31,9 +39,9 @@ const CalendarView = ({
   const [calendarView, setCalendarView] = useState('month')
 
   // Filter tasks based on date range if provided
-  const filteredTasks = useMemo(() => {
-    if (!dateRange.start && !dateRange.end) {
-      return tasks
+const filteredTasks = useMemo(() => {
+    if (!dateRange || (!dateRange.start && !dateRange.end)) {
+      return tasks || []
     }
 
     return tasks.filter(task => {
@@ -213,11 +221,21 @@ const CalendarView = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
+<Button
             variant="ghost"
             size="sm"
             icon="ChevronLeft"
-            onClick={() => setCurrentDate(moment(currentDate).subtract(1, calendarView).toDate())}
+            onClick={() => {
+              const newDate = new Date(currentDate);
+              if (calendarView === 'month') {
+                newDate.setMonth(newDate.getMonth() - 1);
+              } else if (calendarView === 'week') {
+                newDate.setDate(newDate.getDate() - 7);
+              } else {
+                newDate.setDate(newDate.getDate() - 1);
+              }
+              setCurrentDate(newDate);
+            }}
           />
           <Button
             variant="ghost"
@@ -231,7 +249,17 @@ const CalendarView = ({
             variant="ghost"
             size="sm"
             icon="ChevronRight"
-            onClick={() => setCurrentDate(moment(currentDate).add(1, calendarView).toDate())}
+            onClick={() => {
+              const newDate = new Date(currentDate);
+              if (calendarView === 'month') {
+                newDate.setMonth(newDate.getMonth() + 1);
+              } else if (calendarView === 'week') {
+                newDate.setDate(newDate.getDate() + 7);
+              } else {
+                newDate.setDate(newDate.getDate() + 1);
+              }
+              setCurrentDate(newDate);
+            }}
           />
         </div>
       </div>
